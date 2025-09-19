@@ -6,12 +6,12 @@ local statuslist = {};
 statuslist.fallensurvival = {
 	name 		= 'Fallen Survival';
 	status 		= 'Undetected';
-	support 	= {'Zenith'; 'Swift'; 'Wave'; 'Potassium_'; 'Volcano_'; 'Xeno'; };
+	support 	= {'Zenith'; 'Swift'; 'Wave'; 'Potassium_'; 'Volcano_'; };
 };
 statuslist.tridentsurvival = {
 	name 		= 'Trident Survival';
 	status 		= 'Use at own risk';
-	support 	= {'Wave'; 'AWP'; 'MacSploit'; 'Velocity'; 'Potassium'; 'Seliware'; 'Xeno'; };
+	support 	= {'Wave'; 'AWP'; 'MacSploit'; 'Velocity'; 'Potassium'; 'Seliware'; };
 };
 
 local players 		= game:GetService('Players');
@@ -21,6 +21,21 @@ if (not localPlayer) then
 	localPlayer = players.LocalPlayer;
 end;
 
+local executor 		= identifyexecutor and identifyexecutor() or 'Unknown';
+
+local messagebox 	= messageboxasync or messagebox;
+local request 		= request or http_request;
+local loadstring 	= loadstring;
+
+local protectedMessagebox = function(body, title, id)
+	local success, output = pcall(messagebox, body, title, id);
+	if (not success) then
+		localPlayer:Kick(`[amongus.hook] messagebox_error - {body}`);
+		task.wait(9e9);
+		return;
+	end;
+	return output;
+end;
 local protectedLoad = function(url)
 	local success, response = pcall(request, {Url=url; Method='GET';});
 	if (not success) then
