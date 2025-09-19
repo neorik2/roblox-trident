@@ -57,9 +57,9 @@ local protectedLoad = function(url)
 end;
 
 if (type(loadstring) ~= 'function') then
-	return protectedMessagebox(`missing alias ( loadstring ) - unsupported executor`, `amongus.hook [{executor}]`, 48);
+	return protectedMessagebox(`missing alias ( loadstring ) - не кикай пж`, `не кикай пж [{executor}]`, 48);
 elseif (type(request) ~= 'function') then
-	return protectedMessagebox(`missing alias ( request ) - unsupported executor`, `amongus.hook [{executor}]`, 48);
+	return protectedMessagebox(`missing alias ( request ) - не кикай пж`, `не кикай пж [{executor}]`, 48);
 elseif (not Drawing) then
 	protectedLoad('https://raw.githubusercontent.com/mainstreamed/amongus-hook/refs/heads/main/drawingfix.lua');
 end;
