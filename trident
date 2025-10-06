@@ -1,32 +1,3 @@
-if not game:IsLoaded() then
-	game.Loaded:Wait()
-end;
-
-local statuslist = {};
-statuslist.fallensurvival = {
-	name 		= 'Fallen Survival';
-	status 		= 'Undetected';
-	support 	= {'Zenith'; 'Swift'; 'Wave'; 'Potassium_'; 'Volcano_'; };
-};
-statuslist.tridentsurvival = {
-	name 		= 'Trident Survival';
-	status 		= 'Use at own risk';
-	support 	= {'Wave'; 'AWP'; 'MacSploit'; 'Velocity'; 'Potassium'; 'Seliware'; };
-};
-
-local players 		= game:GetService('Players');
-local localPlayer 	= players.LocalPlayer;
-if (not localPlayer) then
-	players:GetPropertyChangedSignal('LocalPlayer'):Wait();
-	localPlayer = players.LocalPlayer;
-end;
-
-local executor 		= identifyexecutor and identifyexecutor() or 'Unknown';
-
-local messagebox 	= messageboxasync or messagebox;
-local request 		= request or http_request;
-local loadstring 	= loadstring;
-
 local protectedMessagebox = function(body, title, id)
 	local success, output = pcall(messagebox, body, title, id);
 	if (not success) then
@@ -57,9 +28,9 @@ local protectedLoad = function(url)
 end;
 
 if (type(loadstring) ~= 'function') then
-	return protectedMessagebox(`missing alias ( loadstring ) - не кикай пж`, `не кикай пж [{executor}]`, 48);
+	return protectedMessagebox(`missing alias ( loadstring ) - unsupported executor`, `amongus.hook [{executor}]`, 48);
 elseif (type(request) ~= 'function') then
-	return protectedMessagebox(`missing alias ( request ) - не кикай пж`, `не кикай пж [{executor}]`, 48);
+	return protectedMessagebox(`missing alias ( request ) - unsupported executor`, `amongus.hook [{executor}]`, 48);
 elseif (not Drawing) then
 	protectedLoad('https://raw.githubusercontent.com/mainstreamed/amongus-hook/refs/heads/main/drawingfix.lua');
 end;
@@ -74,7 +45,7 @@ local load = function(name)
 	elseif (
 		game.support and 
 		not table.find(game.support, executor) and 
-		protectedMessagebox(`Unsupported Executor!\n\n{executor} не кикай пж {game.name}\не кикай пж`, `amongus.hook [{executor}]`, 52) ~= 6
+		protectedMessagebox(`Unsupported Executor!\n\n{executor} is not Officially Supported for {game.name}\nand may have Undefined Behaviour or even result in a BAN!\n\nAre You Sure You Want to Continue?`, `amongus.hook [{executor}]`, 52) ~= 6
 	) then
 		return;
 	end;
