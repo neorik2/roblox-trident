@@ -1,0 +1,146 @@
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+--
+local window = DrRayLibrary:Load("HamsterHook", "Default")
+--
+local tab = DrRayLibrary.newTab("⚔️Combat⚔️", "ImageIdHere")
+-- hitbox
+tab.newButton("ХИТБОКСЫ", "", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20hitbox",true))()
+end)
+-- No Spread
+tab.newButton("без разброса", "", function()
+local no_spread; no_spread = hookmetamethod(Random.new(), "__namecall", newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    if method == "NextInteger" and debug.info(3, "l") == 283 and debug.info(3, "s"):find("RangedWeaponClient") or method == "NextInteger" and debug.info(3, "l") == 152 and debug.info(3, "s"):find("BowClient") then
+        if getstack(3, 12) == -100 and getstack(3, 13) == 100 then
+            setstack(3, 12, math.random(0, 0))
+            setstack(3, 13, math.random(0, 0))
+        end
+    end
+    return no_spread(self, ...)
+end))
+end)
+-- No recoil
+tab.newButton("без отдачи", "", function()
+local no_recoil; no_recoil = hookfunction(CFrame.new, newcclosure(function(...)
+    if (debug.info(3,"l") == 389 and debug.info(3,"s"):find("Camera")) then
+        setstack(3, 1, {cameraXShake=0,rotSpeed=0,rotMag=0,returnTime=0,push=0,returnLerp=0,cameraY=0,cameraX=0,lerp=0})
+    end
+    return no_recoil(...)
+end))
+end)
+-- no cooldown
+tab.newButton("быстрый бур", "фаст бур", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/Mine%20speed%20v5",true))()
+end)
+local tab = DrRayLibrary.newTab("👀ВХ и тд 1👀", "ImageIdHere")
+-- Esp
+tab.newButton("вх", "", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20esp",true))()
+end)
+--
+tab.newButton("скелет вх", "", function()
+-- Skeleton Esp
+loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/Skeleton%20esp%20v5",true))()
+end)
+-- CrossHair
+tab.newButton("прицел свастон", "", function()
+loadstring(game:HttpGet("loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20hitbox",true))()
+end)",true))()
+end)
+-- Name
+loadstring(game:HttpGet("https://pastefy.app/x4eyk9jG/raw",true))()
+--
+local tab = DrRayLibrary.newTab("🌍 мир 🌍", "ImageIdHere")
+local Lighting = game:GetService("Lighting")
+local Camera = workspace.CurrentCamera
+--
+local DesiredColor = Color3.fromRGB(255, 255, 255)
+local custom_ambient = false
+local FovEnabled = false
+local no_fog, no_shadows, no_colorshift = false, false, false
+local SpoofedFov = 120
+--
+local ambientFunc = {
+    TimeOfDay = Lighting.TimeOfDay,
+    Ambient = Lighting.Ambient,
+    GlobalShadows = Lighting.GlobalShadows,
+    ColorShift_Top = Lighting.ColorShift_Top,
+    ColorShift_Bottom = Lighting.ColorShift_Bottom,
+    FogEnd = Lighting.FogEnd,
+    FogStart = Lighting.FogStart,
+    FogColor = Lighting.FogColor
+}
+--
+local fovFunc = {
+    FieldOfView = Camera.FieldOfView
+}
+--
+local spoofed_ambient2
+spoofed_ambient2 = hookmetamethod(game, "__index", newcclosure(function(self, key)
+    if checkcaller() then
+        return spoofed_ambient2(self, key)
+    end
+    if self == Lighting and ambientFunc[key] ~= nil then
+        return ambientFunc[key]
+    end
+    if self == Camera and fovFunc[key] then
+        return fovFunc[key]
+    end
+    return spoofed_ambient2(self, key)
+end))
+--
+local spoofed_ambient1
+spoofed_ambient1 = hookmetamethod(game, "__newindex", newcclosure(function(self, key, value)
+    if checkcaller() then
+        return spoofed_ambient1(self, key, value)
+    end
+--
+    if self == Lighting and ambientFunc[key] ~= nil then
+        ambientFunc[key] = value
+        if key == "Ambient" then
+            return spoofed_ambient1(self, key, custom_ambient and DesiredColor or value)
+        elseif key == "GlobalShadows" then
+            return spoofed_ambient1(self, key, no_shadows and false or value)
+        elseif key == "ColorShift_Top" or key == "ColorShift_Bottom" then
+            return spoofed_ambient1(self, key, no_colorshift and Color3.new(0, 0, 0) or value)
+        elseif key == "FogStart" or key == "FogEnd" then
+            return spoofed_ambient1(self, key, no_fog and 1e6 or value)
+        end
+    end
+--
+    if self == Camera and key == "видеть ночью" then
+        fovFunc[key] = value
+        if FovEnabled then
+            return spoofed_ambient1(self, key, SpoofedFov)
+        end
+    end
+--
+    return spoofed_ambient1(self, key, value)
+end))
+--
+tab.newToggle("Ambient", "Toggle Ambient override on/off", false, function(state)
+    custom_ambient = state
+end)
+--
+tab.newToggle("фов 120", "Toggle FOV override on/off", false, function(state)
+    FovEnabled = state
+end)
+local tab = DrRayLibrary.newTab("❓Рандом❓", "ImageIdHere")
+-- Chat Spammer
+local Chatspam = false
+local spamspeed = speed
+tab.newToggle("спам чат", "", true, function(toggleState)
+    if toggleState then
+        Chatspam = true
+    else
+        Chatspam = false
+    end
+end)
+while true do
+    speed = task.wait(12)
+    if Chatspam then
+        local shitchat = game.TextChatService.TextChannels.RBXGeneral
+        shitchat:SendAsync(".T.me liracheat")
+    end
+end
