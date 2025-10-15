@@ -1,146 +1,84 @@
-local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
---
-local window = DrRayLibrary:Load("HamsterHook", "Default")
---
-local tab = DrRayLibrary.newTab("⚔️Combat⚔️", "ImageIdHere")
--- hitbox
-tab.newButton("ХИТБОКСЫ", "", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20hitbox",true))()
-end)
--- No Spread
-tab.newButton("без разброса", "", function()
-local no_spread; no_spread = hookmetamethod(Random.new(), "__namecall", newcclosure(function(self, ...)
-    local method = getnamecallmethod()
-    if method == "NextInteger" and debug.info(3, "l") == 283 and debug.info(3, "s"):find("RangedWeaponClient") or method == "NextInteger" and debug.info(3, "l") == 152 and debug.info(3, "s"):find("BowClient") then
-        if getstack(3, 12) == -100 and getstack(3, 13) == 100 then
-            setstack(3, 12, math.random(0, 0))
-            setstack(3, 13, math.random(0, 0))
-        end
-    end
-    return no_spread(self, ...)
-end))
-end)
--- No recoil
-tab.newButton("без отдачи", "", function()
-local no_recoil; no_recoil = hookfunction(CFrame.new, newcclosure(function(...)
-    if (debug.info(3,"l") == 389 and debug.info(3,"s"):find("Camera")) then
-        setstack(3, 1, {cameraXShake=0,rotSpeed=0,rotMag=0,returnTime=0,push=0,returnLerp=0,cameraY=0,cameraX=0,lerp=0})
-    end
-    return no_recoil(...)
-end))
-end)
--- no cooldown
-tab.newButton("быстрый бур", "фаст бур", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/Mine%20speed%20v5",true))()
-end)
-local tab = DrRayLibrary.newTab("👀ВХ и тд 1👀", "ImageIdHere")
--- Esp
-tab.newButton("вх", "", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20esp",true))()
-end)
---
-tab.newButton("скелет вх", "", function()
--- Skeleton Esp
-loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/Skeleton%20esp%20v5",true))()
-end)
--- CrossHair
-tab.newButton("прицел свастон", "", function()
-loadstring(game:HttpGet("loadstring(game:HttpGet("https://raw.githubusercontent.com/milo22-ux/Trident-survival-stuff/refs/heads/main/V5%20hitbox",true))()
-end)",true))()
-end)
--- Name
-loadstring(game:HttpGet("https://pastefy.app/x4eyk9jG/raw",true))()
---
-local tab = DrRayLibrary.newTab("🌍 мир 🌍", "ImageIdHere")
-local Lighting = game:GetService("Lighting")
-local Camera = workspace.CurrentCamera
---
-local DesiredColor = Color3.fromRGB(255, 255, 255)
-local custom_ambient = false
-local FovEnabled = false
-local no_fog, no_shadows, no_colorshift = false, false, false
-local SpoofedFov = 120
---
-local ambientFunc = {
-    TimeOfDay = Lighting.TimeOfDay,
-    Ambient = Lighting.Ambient,
-    GlobalShadows = Lighting.GlobalShadows,
-    ColorShift_Top = Lighting.ColorShift_Top,
-    ColorShift_Bottom = Lighting.ColorShift_Bottom,
-    FogEnd = Lighting.FogEnd,
-    FogStart = Lighting.FogStart,
-    FogColor = Lighting.FogColor
-}
---
-local fovFunc = {
-    FieldOfView = Camera.FieldOfView
-}
---
-local spoofed_ambient2
-spoofed_ambient2 = hookmetamethod(game, "__index", newcclosure(function(self, key)
-    if checkcaller() then
-        return spoofed_ambient2(self, key)
-    end
-    if self == Lighting and ambientFunc[key] ~= nil then
-        return ambientFunc[key]
-    end
-    if self == Camera and fovFunc[key] then
-        return fovFunc[key]
-    end
-    return spoofed_ambient2(self, key)
-end))
---
-local spoofed_ambient1
-spoofed_ambient1 = hookmetamethod(game, "__newindex", newcclosure(function(self, key, value)
-    if checkcaller() then
-        return spoofed_ambient1(self, key, value)
-    end
---
-    if self == Lighting and ambientFunc[key] ~= nil then
-        ambientFunc[key] = value
-        if key == "Ambient" then
-            return spoofed_ambient1(self, key, custom_ambient and DesiredColor or value)
-        elseif key == "GlobalShadows" then
-            return spoofed_ambient1(self, key, no_shadows and false or value)
-        elseif key == "ColorShift_Top" or key == "ColorShift_Bottom" then
-            return spoofed_ambient1(self, key, no_colorshift and Color3.new(0, 0, 0) or value)
-        elseif key == "FogStart" or key == "FogEnd" then
-            return spoofed_ambient1(self, key, no_fog and 1e6 or value)
-        end
-    end
---
-    if self == Camera and key == "видеть ночью" then
-        fovFunc[key] = value
-        if FovEnabled then
-            return spoofed_ambient1(self, key, SpoofedFov)
-        end
-    end
---
-    return spoofed_ambient1(self, key, value)
-end))
---
-tab.newToggle("Ambient", "Toggle Ambient override on/off", false, function(state)
-    custom_ambient = state
-end)
---
-tab.newToggle("фов 120", "Toggle FOV override on/off", false, function(state)
-    FovEnabled = state
-end)
-local tab = DrRayLibrary.newTab("❓Рандом❓", "ImageIdHere")
--- Chat Spammer
-local Chatspam = false
-local spamspeed = speed
-tab.newToggle("спам чат", "", true, function(toggleState)
-    if toggleState then
-        Chatspam = true
-    else
-        Chatspam = false
-    end
-end)
-while true do
-    speed = task.wait(12)
-    if Chatspam then
-        local shitchat = game.TextChatService.TextChannels.RBXGeneral
-        shitchat:SendAsync(".T.me liracheat")
-    end
+local _a = Instance.new("ScreenGui")
+_a.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
+local _b = Instance.new("Frame")
+_b.Size = UDim2.new(0, 200, 0, 100)
+_b.Position = UDim2.new(0.5, -100, 0.5, -50)
+_b.BackgroundColor3 = Color3.new(1, 1, 1)
+_b.Parent = _a
+
+local _c = Instance.new("TextLabel")
+_c.Size = UDim2.new(1, 0, 0, 20)
+_c.Position = UDim2.new(0, 0, 0, -20)
+_c.Text = "HAMSTERHOOK free"
+_c.TextColor3 = Color3.new(1, 1, 1)
+_c.BackgroundColor3 = Color3.new(0, 0, 0)
+_c.Parent = _b
+
+local _d, _e, _f, _g
+
+local function _h(_i)
+    local _j = _i.Position - _f
+    _b.Position = UDim2.new(_g.X.Scale, _g.X.Offset + _j.X, _g.Y.Scale, _g.Y.Offset + _j.Y)
 end
+
+_c.InputBegan:Connect(function(_k)
+    if _k.UserInputType == Enum.UserInputType.MouseButton1 or _k.UserInputType == Enum.UserInputType.Touch then
+        _d = true
+        _f = _k.Position
+        _g = _b.Position
+        
+        _k.Changed:Connect(function()
+            if _k.UserInputState == Enum.UserInputState.End then
+                _d = false
+            end
+        end)
+    end
+end)
+
+_c.InputChanged:Connect(function(_l)
+    if _l.UserInputType == Enum.UserInputType.MouseMovement or _l.UserInputType == Enum.UserInputType.Touch then
+        _e = _l
+    end
+end)
+
+_c.InputEnded:Connect(function(_m)
+    if _m.UserInputType == Enum.UserInputType.MouseButton1 or _m.UserInputType == Enum.UserInputType.Touch then
+        _d = false
+        _e = nil
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(_n)
+    if _n == _e and _d then
+        _h(_n)
+    end
+end)
+
+local _o = Instance.new("TextBox")
+_o.Size = UDim2.new(1, 0, 0.5, 0)
+_o.Position = UDim2.new(0, 0, 0, 0)
+_o.Text = "Enter the Key"
+_o.TextColor3 = Color3.new(0, 0, 0)
+_o.BackgroundTransparency = 0.5
+_o.BackgroundColor3 = Color3.new(1, 1, 1)
+_o.TextWrapped = true
+_o.Parent = _b
+
+local _p = Instance.new("TextButton")
+_p.Size = UDim2.new(0.5, 0, 0.5, 0)
+_p.Position = UDim2.new(0, 0, 0.5, 0)
+_p.Text = "Submit"
+_p.Parent = _b
+
+local _q = Instance.new("TextButton")
+_q.Size = UDim2.new(0, 20, 0, 20)
+_q.Position = UDim2.new(1, -20, 0, 0)
+_q.Text = "X"
+_q.TextColor3 = Color3.new(1, 1, 1)
+_q.BackgroundColor3 = Color3.new(1, 0, 0)
+_q.Parent = _b
+
+_q.MouseButton1Click:Connect(function()
+    _a:Destroy()
+end)
